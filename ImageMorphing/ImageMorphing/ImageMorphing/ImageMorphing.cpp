@@ -28,10 +28,50 @@ void Blend(int, void*)
 // Facial feature detection - face, eyes, mouth - Or select points
 void face(Mat image)
 {
+	std::vector<Rect> faces;
+	Mat imageGray, gray;
+	cvtColor(image, imageGray, COLOR_BGR2GRAY);
+	equalizeHist(imageGray, imageGray);			// Histogram equalization
 
+	// Detect faces
+	face_cascade.detectMultiScale(imageGray, faces, 1.1, 2, 0 | CASCADE_SCALE_IMAGE, Size(30, 30));
+	// Set Region of Interest
+	cv::Rect roi_b;
+	cv::Rect roi_c;
+	size_t ic = 0;								// current face index
+	int ac = 0;									// current face area
+	size_t ib = 0;								// biggest face index
+	int ab = 0;									// biggest face area
+	for (ic = 0; ic < faces.size(); ic++)		// Iterate through all current faces (detected faces)
+	{
+		roi_c.x = faces[ic].x;
+		roi_c.y = faces[ic].y;
+		roi_c.width = (faces[ic].width);
+		roi_c.height = (faces[ic].height);
+		ac = roi_c.width * roi_c.height;		// area of current face (detected face)
+		roi_b.x = faces[ib].x;
+		roi_b.y = faces[ib].y;
+		roi_b.width = (faces[ib].width);
+		roi_b.height = (faces[ib].height);
+		ab = roi_b.width * roi_b.height;		// area of biggest face(initially same as current face)
+		if (ac > ab)							// Check if current larger than biggest face
+		{
+			ib = ic;
+			roi_b.x = faces[ib].x;
+			roi_b.y = faces[ib].y;
+			roi_b.width = (faces[ib].width);
+			roi_b.height = (faces[ib].height);
+		}
+		Point pt1(faces[ic].x, faces[ic].y);		// Display detected face
+		Point pt2((faces[ic].x + faces[ic].height), (faces[ic].y + faces[ic].width));
+		rectangle(image, pt1, pt2, Scalar(0, 255, 0), 2, 8, 0);
+	}
+	imshow("face", image);
+	waitKey(0);
 }
 
 // Warping
+
 
 
 int main(int argc, char** argv)
@@ -43,11 +83,14 @@ int main(int argc, char** argv)
 	// Read the images
 	monkey = imread("../../Images/monkey1.jpg");
 	man = imread("../../Images/man2.jpg");
-	resize(monkey, monkey, man.size()); // Resize monkey to be the same size as man
+
+	// Apply the classifier
+	if (!man.empty()) { face(man); }
+	face(monkey);
+
+	resize(monkey, monkey, man.size());// Resize monkey to be the same size as man
 	namedWindow("image");
 	imshow("image", man);
-	createTrackbar("Alpha", "image", &alpha, max_elem, Blend);	// Linear
-
+	createTrackbar("Alpha", "image", &alpha, max_elem, Blend);
 	waitKey(0);
-	return 0;
 }
