@@ -1,7 +1,7 @@
 %%The following script computes the SIFT features of the input images and 
 %%display them on the images. SIFT features are calculated using vlfeat. A
-%%predefined algorithm is available for matching the features but an
-%%algorithm has to be implemented from scratch
+%%predefined algorithm is available for matching which matches SIFT
+%%features among the images.
 
 %%
 
@@ -21,32 +21,31 @@ Ibx = single(rgb2gray(Ib));
 %[matches, scores] = vl_ubcmatch(da, db) ;
 
 % Displaying SIFT features on the image
-image(Ia);
-h1 = vl_plotframe(fa) ;
-h2 = vl_plotframe(fa) ;
-set(h1,'color','k','linewidth',3) ;
-set(h2,'color','y','linewidth',2) ;
-
-figure;
-
-image(Ib);
-h3 = vl_plotframe(fb) ;
-h4 = vl_plotframe(fb) ;
-set(h3,'color','k','linewidth',3) ;
-set(h4,'color','y','linewidth',2) ;
-
-
-% Extract the matches and display only the matches
 % image(Ia);
-% h1 = vl_plotframe(fa(:,matches(1,:))) ;
-% h2 = vl_plotframe(fa(:,matches(1,:))) ;
+% h1 = vl_plotframe(fa) ;
+% h2 = vl_plotframe(fa) ;
 % set(h1,'color','k','linewidth',3) ;
 % set(h2,'color','y','linewidth',2) ;
 % 
-% figure
+% figure;
+% 
 % image(Ib);
-% h3 = vl_plotframe(fb(:,matches(2,:))) ;
-% h4 = vl_plotframe(fb(:,matches(2,:))) ;
+% h3 = vl_plotframe(fb) ;
+% h4 = vl_plotframe(fb) ;
 % set(h3,'color','k','linewidth',3) ;
 % set(h4,'color','y','linewidth',2) ;
+
+%Extract the matches and display only the matches
+image(Ia);
+h1 = vl_plotframe(fa(:,matches(1,:))) ;
+h2 = vl_plotframe(fa(:,matches(1,:))) ;
+set(h1,'color','k','linewidth',3) ;
+set(h2,'color','y','linewidth',2) ;
+
+figure
+image(Ib);
+h3 = vl_plotframe(fb(:,matches(2,:))) ;
+h4 = vl_plotframe(fb(:,matches(2,:))) ;
+set(h3,'color','k','linewidth',3) ;
+set(h4,'color','y','linewidth',2) ;
 
