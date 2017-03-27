@@ -7,6 +7,10 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <msclr/marshal_cppstd.h>
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+#include <stdlib.h>
 #include "spline.h"
 #include "math.h"
 
@@ -80,6 +84,7 @@ namespace MyGUI {
 			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
 			this->fileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->importToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->saveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->exitToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->ManPictureBox = (gcnew System::Windows::Forms::PictureBox());
 			this->MonkeyPictureBox = (gcnew System::Windows::Forms::PictureBox());
@@ -87,7 +92,6 @@ namespace MyGUI {
 			this->MorphedTrackBar = (gcnew System::Windows::Forms::TrackBar());
 			this->buttonManOpen = (gcnew System::Windows::Forms::Button());
 			this->buttonMonkeyOpen = (gcnew System::Windows::Forms::Button());
-			this->saveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->menuStrip1->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->ManPictureBox))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->MonkeyPictureBox))->BeginInit();
@@ -120,14 +124,21 @@ namespace MyGUI {
 			// importToolStripMenuItem
 			// 
 			this->importToolStripMenuItem->Name = L"importToolStripMenuItem";
-			this->importToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->importToolStripMenuItem->Size = System::Drawing::Size(135, 26);
 			this->importToolStripMenuItem->Text = L"Import";
 			this->importToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::importToolStripMenuItem_Click);
+			// 
+			// saveToolStripMenuItem
+			// 
+			this->saveToolStripMenuItem->Name = L"saveToolStripMenuItem";
+			this->saveToolStripMenuItem->Size = System::Drawing::Size(135, 26);
+			this->saveToolStripMenuItem->Text = L"Save As";
+			this->saveToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::saveToolStripMenuItem_click);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this->exitToolStripMenuItem->Name = L"exitToolStripMenuItem";
-			this->exitToolStripMenuItem->Size = System::Drawing::Size(181, 26);
+			this->exitToolStripMenuItem->Size = System::Drawing::Size(135, 26);
 			this->exitToolStripMenuItem->Text = L"Exit";
 			// 
 			// ManPictureBox
@@ -144,6 +155,8 @@ namespace MyGUI {
 			this->ManPictureBox->TabStop = false;
 			this->ManPictureBox->WaitOnLoad = true;
 			this->ManPictureBox->Click += gcnew System::EventHandler(this, &MyForm::ManPicturebox_Click);
+			this->ManPictureBox->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::ManPicturebox_MouseClick);
+			this->ManPictureBox->MouseHover += gcnew System::EventHandler(this, &MyForm::ManPictureBox_MouseHover);
 			// 
 			// MonkeyPictureBox
 			// 
@@ -158,6 +171,8 @@ namespace MyGUI {
 			this->MonkeyPictureBox->TabStop = false;
 			this->MonkeyPictureBox->WaitOnLoad = true;
 			this->MonkeyPictureBox->Click += gcnew System::EventHandler(this, &MyForm::MonkeyPictureBox_Click);
+			this->MonkeyPictureBox->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::MonkeyPictureBox_MouseClick);
+			this->MonkeyPictureBox->MouseHover += gcnew System::EventHandler(this, &MyForm::MonkeyPictureBox_MouseHover);
 			// 
 			// MorphedPictureBox
 			// 
@@ -204,13 +219,6 @@ namespace MyGUI {
 			this->buttonMonkeyOpen->UseVisualStyleBackColor = true;
 			this->buttonMonkeyOpen->Click += gcnew System::EventHandler(this, &MyForm::MonkeyOpen_click);
 			// 
-			// saveToolStripMenuItem
-			// 
-			this->saveToolStripMenuItem->Name = L"saveToolStripMenuItem";
-			this->saveToolStripMenuItem->Size = System::Drawing::Size(181, 26);
-			this->saveToolStripMenuItem->Text = L"Save As";
-			this->saveToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::saveToolStripMenuItem_click);
-			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
@@ -238,12 +246,12 @@ namespace MyGUI {
 
 		}
 #pragma endregion
+	//xxxxxxxxxxxxx
 	private: System::Void importToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 		// Displays an OpenFileDialog so the user can select an image file.  
 		OpenFileDialog ^ openFileDialog1 = gcnew OpenFileDialog();
 		openFileDialog1->Filter = "All Graphics Types|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff";
 		openFileDialog1->Title = "Select an Image File of a Man";
-
 		// Show the Dialog.  
 		// If the user clicked OK in the dialog and  
 		if (openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK)
@@ -256,6 +264,7 @@ namespace MyGUI {
 			editedImage = cv::imread("cacheMan.jpg", cv::IMREAD_COLOR);
 		}
 	}
+	// Import and open image of Man
 	private: System::Void ManOpen_click(System::Object^  sender, System::EventArgs^  e) {
 		// Displays an OpenFileDialog so the user can select an image file.  
 		OpenFileDialog ^ openFileDialog1 = gcnew OpenFileDialog();
@@ -273,6 +282,7 @@ namespace MyGUI {
 			manImage = cv::imread("cacheMan.jpg", cv::IMREAD_COLOR);
 		}
 	}
+	// Import and open image of Monkey
 	private: System::Void MonkeyOpen_click(System::Object^  sender, System::EventArgs^  e) {
 		// Displays an OpenFileDialog so the user can select an image file.  
 		OpenFileDialog ^ openFileDialog1 = gcnew OpenFileDialog();
@@ -289,13 +299,43 @@ namespace MyGUI {
 			MonkeyPictureBox->Image->Save("cacheMonkey.jpg", System::Drawing::Imaging::ImageFormat::Jpeg);
 			monkeyImage = cv::imread("cacheMonkey.jpg", cv::IMREAD_COLOR);
 			cv::resize(monkeyImage, monkeyImage, manImage.size()); // Resize monkey to be the same size as man
+
+			//Read points
+			std::vector<cv::Point2f> points1 = readPoints("Man.txt");
+			std::vector<cv::Point2f> points2 = readPoints("Monkey.txt");
+		}
+	}
+	// Save morphed image
+	private: System::Void saveToolStripMenuItem_click(System::Object^  sender, System::EventArgs^  e) {
+		char  savePath[100];
+		// Displays an saveFileDialog so the user can enter an image file.  
+		SaveFileDialog ^ saveFileDialog1 = gcnew SaveFileDialog();
+		saveFileDialog1->Filter = "All Graphics Types|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff";
+		saveFileDialog1->Title = "Save As Morphed Image";
+		saveFileDialog1->ShowDialog();
+		// Show the Dialog.  
+		if (saveFileDialog1->FileName)
+		{
+			std::string filePath = msclr::interop::marshal_as<std::string>(saveFileDialog1->FileName);
+			sprintf(savePath, "%s", filePath.c_str());
+			cv::imwrite(savePath, morphedImage);
 		}
 	}
 
+	private: System::Void ManPicturebox_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+		std::vector<cv::Point>* ptPtr = (std::vector<cv::Point>*)param;
+		ptPtr->push_back(cv::Point(x, y));
+		printf("%d %d\n", x, y);
+	}
+	private: System::Void MonkeyPictureBox_MouseClick(System::Object^  sender, System::Windows::Forms::MouseEventArgs^  e) {
+	}
+
 	private: System::Void ManPicturebox_Click(System::Object^  sender, System::EventArgs^  e) {
-		
+		//cv::setMouseCallback(, mouseClick, (void*)&points);
+
 	}
 	private: System::Void MonkeyPictureBox_Click(System::Object^  sender, System::EventArgs^  e) {
+	
 	}
 	private: System::Void MorphedPictureBox_Click(System::Object^  sender, System::EventArgs^  e) {
 	}
@@ -308,12 +348,93 @@ namespace MyGUI {
 	}
 
 			 // Functions defined in opencv
+
+			 // Store mouse click co-ordinates in txt file
+			 void mouseClick(int evt, int x, int y, int flags, void* param) {
+				 if (evt == CV_EVENT_LBUTTONDOWN) {
+					 std::vector<cv::Point>* ptPtr = (std::vector<cv::Point>*)param;
+					 ptPtr->push_back(cv::Point(x, y));
+					 printf("%d %d\n", x, y);
+				 }
+			 }
+
+			 // Read points from text file
+			 std::vector<cv::Point2f> readPoints(std::string pointsFileName)
+			 {
+				 std::vector<cv::Point2f> points;
+				 std::ifstream ifs(pointsFileName);
+				 float x, y;
+				 while (ifs >> x >> y)
+				 {
+					 points.push_back(cv::Point2f(x, y));
+				 }
+				 return points;
+			 }
+
+			 // Feature matching - local warp
+			 void Warping(cv::Mat &img1, cv::Mat &img2, cv::Mat &img, std::vector<cv::Point2f> &t1, std::vector<cv::Point2f> &t2, std::vector<cv::Point2f> &t, double alpha)
+			 {
+				 // Find bounding rectangle for each triangle
+				 cv::Rect r = cv::boundingRect(t);
+				 cv::Rect r1 = cv::boundingRect(t1);
+				 cv::Rect r2 = cv::boundingRect(t2);
+
+				 // Offset points by left top corner of the respective rectangles
+				 std::vector<cv::Point2f> t1Rect, t2Rect, tRect;
+				 std::vector<cv::Point> tRectInt;
+				 for (int i = 0; i < 3; i++)
+				 {
+					 tRect.push_back(cv::Point2f(t[i].x - r.x, t[i].y - r.y));
+					 tRectInt.push_back(cv::Point(t[i].x - r.x, t[i].y - r.y)); // for fillConvexPoly
+
+					 t1Rect.push_back(cv::Point2f(t1[i].x - r1.x, t1[i].y - r1.y));
+					 t2Rect.push_back(cv::Point2f(t2[i].x - r2.x, t2[i].y - r2.y));
+				 }
+
+				 // Get mask by filling triangle
+				 cv::Mat mask = cv::Mat::zeros(r.height, r.width, CV_32FC3);
+				 cv::fillConvexPoly(mask, tRectInt, cv::Scalar(1.0, 1.0, 1.0), 16, 0);
+
+				 // Apply warpImage to small rectangular patches
+				 cv::Mat img1Rect, img2Rect;
+				 img1(r1).copyTo(img1Rect);
+				 img2(r2).copyTo(img2Rect);
+
+				 cv::Mat warpImage1 = cv::Mat::zeros(r.height, r.width, img1Rect.type());
+				 cv::Mat warpImage2 = cv::Mat::zeros(r.height, r.width, img2Rect.type());
+
+				 applyAffineTransform(warpImage1, img1Rect, t1Rect, tRect);
+				 applyAffineTransform(warpImage2, img2Rect, t2Rect, tRect);
+
+			 }
+
+
+
+			 // Affine Transform
+			 void applyAffineTransform(cv::Mat &warpImage, cv::Mat &src, std::vector<cv::Point2f> &srcTri, std::vector<cv::Point2f> &dstTri)
+			 {
+				 // Given a pair of triangles, find the affine transform.
+				 cv::Mat warpMat = cv::getAffineTransform(srcTri, dstTri);
+
+				 // Apply the Affine Transform just found to the src image
+				 cv::warpAffine(src, warpImage, warpMat, warpImage.size(), cv::INTER_LINEAR, cv::BORDER_REFLECT_101);
+			 }
+
+
+			 // Global Warp -- Not essential ;)
+			 void Alignment()
+			 {
+
+			 }
+
+
+			 // Linear blending/ Cross-dissolve function
 			 void Blend(cv::Mat *manImage, cv::Mat *monkeyImage, int tempValueMorphed)
 			 {
 				 cv::Mat man = *manImage;
 				 cv::Mat monkey = *monkeyImage;
 				 cv::resize(monkey, monkey, man.size()); // Resize monkey to be the same size as man
-				 double alpha = tempValueMorphed / 100.0; 
+				 double alpha = tempValueMorphed / 100.0;
 				 double beta = (1.0 - alpha);
 				 cv::addWeighted(monkey, alpha, man, beta, 0.0, morphedImage);
 				 refreshMorphedPicBox(morphedImage);
@@ -333,7 +454,8 @@ namespace MyGUI {
 				 cv::waitKey(0);									// Wait for a keystroke in the window
 				 return 0;
 			 }
-
+			 
+			 // Show updated Morphed image
 			 int refreshMorphedPicBox(cv::Mat displayImage)
 			 {
 				 System::Drawing::Graphics^ graphics = MorphedPictureBox->CreateGraphics();
@@ -343,20 +465,14 @@ namespace MyGUI {
 				 graphics->DrawImage(b, rect);
 				 return 0;
 			 }
-private: System::Void saveToolStripMenuItem_click(System::Object^  sender, System::EventArgs^  e) {
-	char  savePath[100];
-	// Displays an saveFileDialog so the user can enter an image file.  
-	SaveFileDialog ^ saveFileDialog1 = gcnew SaveFileDialog();
-	saveFileDialog1->Filter = "All Graphics Types|*.bmp;*.jpg;*.jpeg;*.png;*.tif;*.tiff";
-	saveFileDialog1->Title = "Save As Morphed Image";
-	saveFileDialog1->ShowDialog();
-	// Show the Dialog.  
-	if (saveFileDialog1->FileName)
-	{
-		std::string filePath = msclr::interop::marshal_as<std::string>(saveFileDialog1->FileName);
-		sprintf(savePath, "%s", filePath.c_str());
-		cv::imwrite(savePath, morphedImage);
-	}
+
+
+
+
+private: System::Void ManPictureBox_MouseHover(System::Object^  sender, System::EventArgs^  e) {
 }
+private: System::Void MonkeyPictureBox_MouseHover(System::Object^  sender, System::EventArgs^  e) {
+}
+
 };
 }
