@@ -1,2 +1,18 @@
-﻿  ImageMorphing.vcxproj -> D:\GitHub\Project2\Project2_Group3\ImageMorphing\ImageMorphing\x64\Debug\ImageMorphing.exe
+﻿  ImageMorphing.cpp
+d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(103): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(264): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(396): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(397): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(551): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
+d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(552): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
+d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(553): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
+d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(554): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
+d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(556): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
+d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(557): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
+d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(558): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
+d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(560): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
+d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(561): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
+d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(562): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
+  ImageMorphing.vcxproj -> D:\GitHub\Project2\Project2_Group3\ImageMorphing\ImageMorphing\x64\Debug\ImageMorphing.exe
   ImageMorphing.vcxproj -> D:\GitHub\Project2\Project2_Group3\ImageMorphing\ImageMorphing\x64\Debug\ImageMorphing.pdb (Partial PDB)
