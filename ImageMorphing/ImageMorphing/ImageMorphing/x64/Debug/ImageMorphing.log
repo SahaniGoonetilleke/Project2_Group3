@@ -1,21 +1,20 @@
-﻿Build started 4/2/2017 12:10:07 AM.
+﻿Build started 4/2/2017 12:24:32 AM.
      1>Project "F:\MachineVision_Projects\Project2_Group3\ImageMorphing\ImageMorphing\ImageMorphing\ImageMorphing.vcxproj" on node 2 (Build target(s)).
        Project file contains ToolsVersion="15.0". This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion="4.0". For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /IC:\opencv\opencv\build\install\include /Zi /nologo /W3 /WX- /sdl /Od /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc110.pdb" /Gd /TP /errorReport:prompt ImageMorphing.cpp
          ImageMorphing.cpp
+     1>ImageMorphing.cpp(52): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
      1>ImageMorphing.cpp(53): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>ImageMorphing.cpp(54): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>ImageMorphing.cpp(57): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
      1>ImageMorphing.cpp(58): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>ImageMorphing.cpp(59): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
-     1>ImageMorphing.cpp(92): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
-     1>ImageMorphing.cpp(124): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>ImageMorphing.cpp(91): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>ImageMorphing.cpp(123): warning C4244: 'argument' : conversion from 'double' to 'float', possible loss of data
+     1>ImageMorphing.cpp(136): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
      1>ImageMorphing.cpp(137): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-     1>ImageMorphing.cpp(138): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-     1>ImageMorphing.cpp(424): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
-     1>ImageMorphing.cpp(469): warning C4305: 'initializing' : truncation from 'double' to 'float'
+     1>ImageMorphing.cpp(422): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
      1>C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\include\utility(138): warning C4244: 'initializing' : conversion from 'float' to 'int', possible loss of data
-                 ImageMorphing.cpp(492) : see reference to function template instantiation 'std::pair<_Ty1,_Ty2>::pair<_Tp&,_Tp&>(_Other1,_Other2,void **)' being compiled
+                 ImageMorphing.cpp(461) : see reference to function template instantiation 'std::pair<_Ty1,_Ty2>::pair<_Tp&,_Tp&>(_Other1,_Other2,void **)' being compiled
                  with
                  [
                      _Ty1=int,
@@ -24,7 +23,7 @@
                      _Other1=float &,
                      _Other2=float &
                  ]
-                 ImageMorphing.cpp(492) : see reference to function template instantiation 'std::pair<_Ty1,_Ty2>::pair<_Tp&,_Tp&>(_Other1,_Other2,void **)' being compiled
+                 ImageMorphing.cpp(461) : see reference to function template instantiation 'std::pair<_Ty1,_Ty2>::pair<_Tp&,_Tp&>(_Other1,_Other2,void **)' being compiled
                  with
                  [
                      _Ty1=int,
@@ -40,4 +39,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:02.27
+Time Elapsed 00:00:02.16

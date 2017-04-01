@@ -4,7 +4,6 @@
 #include <opencv2/objdetect/objdetect.hpp>
 #include <opencv2/opencv.hpp>
 #include "opencv2/features2d.hpp"
-//#include "opencv2/xfeatures2d.hpp"
 #include <iostream>
 #include <stdio.h>
 #include <vector>
@@ -34,7 +33,7 @@ vector<Vec6f> manTri, monkeyTri, morphedTri;
 bool manClick = true;
 int imageFlag = 1;
 
-
+double alpha = 0.5;			//alpha controls the degree of morph
 
 // Draw a single point
 static void draw_point( Mat& img, Point2f fp, Scalar color )
@@ -130,7 +129,7 @@ void getFeaturePointsMonkey(){
 
 void averageFeaturePoints(){
 
-	double alpha = 0.5;			//alpha controls the degree of morph
+	
 	for (int i = 0; i < manPoints.size(); i++)
 	{
 		float x, y;
@@ -454,44 +453,14 @@ void morphTriangle(Mat &img1, Mat &img2, Mat &img, vector<Point2f> &t1, vector<P
 	//img.convertTo(img,CV_8UC3);    
 }
 
-
-int main(int argc, char** argv)
-{
-	monkey = imread("../../Images/monkey1.jpg");
-	man = imread("../../Images/man1.jpg");
-	resize(monkey, monkey, man.size());			// Resize monkey to be the same size as man
-
-	morphedMonkey = Mat::zeros(man.size(), CV_32FC3);
-	clickMan =man.clone();
-	clickMonkey = monkey.clone();
-
-	float alpha = 0.8;
-
-	//getting Feature Points from User
-	getFeaturePointsMan();
-	getFeaturePointsMonkey();
-	averageFeaturePoints();
-
-	cvDestroyAllWindows();
-
-#ifdef SHOW_DELAUNAY
-	// Delaunay Triangulation
-	drawDelaunayMan();
-	drawDelaunayMonkey();
-#endif	
-
-	getManTriangles();
-	getMonkeyTriangles();
-	getAveragedTriangles();
-
-
+void applyWarp(){
+	
 	map <pair<int,int>,int> pointsMap;
 
 	for(int i =0 ; i < manPoints.size(); i++){
 		pointsMap.insert(pair<pair<int,int>,int>(pair<int,int>(manPoints[i].x,manPoints[i].y),i));	
 	}
-
-
+	
 	Size size = man.size();
 	Rect rect(0, 0, size.width, size.height);
 	for( size_t i = 0; i < manTri.size(); i++ )
@@ -520,6 +489,40 @@ int main(int argc, char** argv)
 		morphTriangle(man,monkey,morphedMonkey,t1,t2,t,alpha);
 
 	}
-	imshow("morphed",morphedMonkey/255.0);
+
+
+}
+int main(int argc, char** argv)
+{
+	monkey = imread("../../Images/monkey1.jpg");
+	man = imread("../../Images/man1.jpg");
+	resize(monkey, monkey, man.size());			// Resize monkey to be the same size as man
+
+	morphedMonkey = Mat::zeros(man.size(), CV_32FC3);
+	clickMan = man.clone();
+	clickMonkey = monkey.clone();
+
+	alpha = 0.25;	
+
+	//getting Feature Points from User
+	getFeaturePointsMan();
+	getFeaturePointsMonkey();
+	averageFeaturePoints();
+
+	cvDestroyAllWindows();
+
+#ifdef SHOW_DELAUNAY
+	// Delaunay Triangulation
+	drawDelaunayMan();
+	drawDelaunayMonkey();
+#endif	
+
+	getManTriangles();
+	getMonkeyTriangles();
+	getAveragedTriangles();
+
+	applyWarp();
+
+	imshow("Morphed",morphedMonkey/255.0);
 	cvWaitKey(0);
 }
