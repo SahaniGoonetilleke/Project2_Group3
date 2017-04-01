@@ -1,18 +1,21 @@
-﻿  ImageMorphing.cpp
-d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(103): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(264): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(396): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(397): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(551): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
-d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(552): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
-d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(553): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
-d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(554): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
-d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(556): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
-d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(557): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
-d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(558): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
-d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(560): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
-d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(561): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
-d:\github\project2\project2_group3\imagemorphing\imagemorphing\imagemorphing\imagemorphing.cpp(562): warning C4244: 'argument': conversion from 'double' to 'const unsigned __int64', possible loss of data
-  ImageMorphing.vcxproj -> D:\GitHub\Project2\Project2_Group3\ImageMorphing\ImageMorphing\x64\Debug\ImageMorphing.exe
-  ImageMorphing.vcxproj -> D:\GitHub\Project2\Project2_Group3\ImageMorphing\ImageMorphing\x64\Debug\ImageMorphing.pdb (Partial PDB)
+﻿Build started 4/1/2017 4:39:34 PM.
+     1>Project "F:\MachineVision_Projects\Project2_Group3\ImageMorphing\ImageMorphing\ImageMorphing\ImageMorphing.vcxproj" on node 2 (Build target(s)).
+       Project file contains ToolsVersion="15.0". This toolset may be unknown or missing, in which case you may be able to resolve this by installing the appropriate version of MSBuild, or the build may have been forced to a particular ToolsVersion for policy reasons. Treating the project as if it had ToolsVersion="4.0". For more information, please see http://go.microsoft.com/fwlink/?LinkId=291333.
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\CL.exe /c /IC:\opencv\opencv\build\install\include /Zi /nologo /W3 /WX- /sdl /Od /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc110.pdb" /Gd /TP /errorReport:prompt ImageMorphing.cpp
+         ImageMorphing.cpp
+     1>ImageMorphing.cpp(49): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>ImageMorphing.cpp(50): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>ImageMorphing.cpp(54): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>ImageMorphing.cpp(55): warning C4244: 'argument' : conversion from 'int' to 'float', possible loss of data
+     1>ImageMorphing.cpp(112): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>ImageMorphing.cpp(113): warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
+     1>ImageMorphing.cpp(331): warning C4244: 'argument' : conversion from 'float' to 'int', possible loss of data
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"F:\MachineVision_Projects\Project2_Group3\ImageMorphing\ImageMorphing\x64\Debug\ImageMorphing.exe" /INCREMENTAL /NOLOGO /LIBPATH:C:\opencv\opencv\build\install\x64\vc11\lib /LIBPATH:C:\opencv\build\install\x64\vc12\lib opencv_core310d.lib opencv_highgui310d.lib opencv_imgproc310d.lib opencv_imgcodecs310d.lib opencv_objdetect310d.lib opencv_features2d310d.lib opencv_flann310d.lib opencv_shape310d.lib opencv_stitching310d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"F:\MachineVision_Projects\Project2_Group3\ImageMorphing\ImageMorphing\x64\Debug\ImageMorphing.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\MachineVision_Projects\Project2_Group3\ImageMorphing\ImageMorphing\x64\Debug\ImageMorphing.lib" /MACHINE:X64 x64\Debug\ImageMorphing.obj
+         ImageMorphing.vcxproj -> F:\MachineVision_Projects\Project2_Group3\ImageMorphing\ImageMorphing\x64\Debug\ImageMorphing.exe
+     1>Done Building Project "F:\MachineVision_Projects\Project2_Group3\ImageMorphing\ImageMorphing\ImageMorphing\ImageMorphing.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.09
