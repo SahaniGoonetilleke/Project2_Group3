@@ -11,9 +11,10 @@
 #include <fstream>
 
 
-#define SHOW_DELAUNAY TRUE
-//#define SHOW_VORONOI FALSE
-#define SAVE_POINTS
+//#define SHOW_DELAUNAY 
+//#define SHOW_VORONOI 
+//#define SAVE_POINTS
+#define READ_POINTS
 
 using namespace cv;
 using namespace std;
@@ -31,6 +32,9 @@ vector<Point2f> averagedPoints;
 vector<Vec6f> manTri, monkeyTri, morphedTri;
 
 bool manClick = true;
+int imageFlag = 1;
+
+
 
 // Draw a single point
 static void draw_point( Mat& img, Point2f fp, Scalar color )
@@ -59,7 +63,7 @@ void mouseClick(int event, int x, int y, int flags, void* userdata)
 }
 
 void getFeaturePointsMan(){
-
+#ifndef READ_POINTS
 	namedWindow("Select Feature Points on Man", 1);
 	//set the callback function for mouse event
 	setMouseCallback("Select Feature Points on Man", mouseClick, NULL);
@@ -79,10 +83,21 @@ void getFeaturePointsMan(){
 	manClick = false; // change the flag for monkey mouseclick
 	cout << "Man Points\n" << manPoints << endl;
 #endif
+
+#endif
+#ifdef READ_POINTS
+	ifstream ifs("../../Images/ManFeaturePoints.txt");
+	double x, y;
+	while (ifs >> x >> y ){
+		manPoints.push_back(Point2f(x, y));
+	}
+
+#endif
+
 }
 
 void getFeaturePointsMonkey(){
-
+#ifndef READ_POINTS
 	namedWindow("Select Corresponding Feature Points on Monkey", 1);
 	//set the callback function for mouse event
 	setMouseCallback("Select Corresponding Feature Points on Monkey", mouseClick, NULL);
@@ -101,6 +116,16 @@ void getFeaturePointsMonkey(){
 	file2.close();
 	cout << "Monkey Points\n" << monkeyPoints << endl;
 #endif
+#endif
+#ifdef READ_POINTS
+	ifstream ifs("../../Images/MonkeyFeaturePoints.txt");
+	double x, y;
+	while (ifs >> x >> y ){
+		monkeyPoints.push_back(Point2f(x, y));
+	}
+
+#endif
+
 }
 
 void averageFeaturePoints(){
@@ -113,10 +138,9 @@ void averageFeaturePoints(){
 		y = (1 - alpha) * manPoints[i].y + alpha * monkeyPoints[i].y;
 		averagedPoints.push_back(Point2f(x, y));
 	}
-	cout << "Weighted Average Points\n" << averagedPoints << endl;
+	//cout << "Weighted Average Points\n" << averagedPoints << endl;
 
 }
-
 
 
 // Draw delaunay triangles
@@ -125,7 +149,7 @@ static void draw_delaunay( Mat& img, Subdiv2D& subdiv, Scalar delaunay_color )
 
 	vector<Vec6f> triangleList;
 	subdiv.getTriangleList(triangleList);
-	
+
 	vector<Point> pt(3);
 	Size size = img.size();
 	Rect rect(0,0, size.width, size.height);
@@ -143,6 +167,8 @@ static void draw_delaunay( Mat& img, Subdiv2D& subdiv, Scalar delaunay_color )
 			line(img, pt[0], pt[1], delaunay_color, 1, CV_AA, 0);
 			line(img, pt[1], pt[2], delaunay_color, 1, CV_AA, 0);
 			line(img, pt[2], pt[0], delaunay_color, 1, CV_AA, 0);
+
+
 		}
 	}
 }
@@ -177,7 +203,7 @@ static void draw_voronoi( Mat& img, Subdiv2D& subdiv )
 
 void drawDelaunayMan(){
 
-	
+
 	// Rectangle to be used with Subdiv2D
 	Size size = man.size();
 	Rect rect(0, 0, size.width, size.height);
@@ -189,7 +215,7 @@ void drawDelaunayMan(){
 	{
 		subdivMan.insert(*it);
 	}
-	
+
 	// Define colors for drawing.
 	Scalar delaunay_color(255,255,255), points_color(0, 0, 255);
 	string manWindow = "Traingulation_man";
@@ -205,11 +231,11 @@ void drawDelaunayMan(){
 
 #ifdef SHOW_VORONOI
 	cvWaitKey(0);
-	 // Allocate space for voronoi Diagram
-    Mat man_voronoi = Mat::zeros(man.rows, man.cols, CV_8UC3);
-    
-    // Draw voronoi diagram
-    draw_voronoi( man_voronoi, subdivMan );
+	// Allocate space for voronoi Diagram
+	Mat man_voronoi = Mat::zeros(man.rows, man.cols, CV_8UC3);
+
+	// Draw voronoi diagram
+	draw_voronoi( man_voronoi, subdivMan );
 	imshow(manWindow, man_voronoi);
 	cvWaitKey(0);
 #endif
@@ -243,10 +269,10 @@ void drawDelaunayMonkey(){
 #ifdef SHOW_VORONOI
 	cvWaitKey(0);
 
-	 // Allocate space for voronoi Diagram
-    Mat monkey_voronoi = Mat::zeros(man.rows, man.cols, CV_8UC3);
-    
-    // Draw voronoi diagram
+	// Allocate space for voronoi Diagram
+	Mat monkey_voronoi = Mat::zeros(man.rows, man.cols, CV_8UC3);
+
+	// Draw voronoi diagram
 	draw_voronoi( monkey_voronoi, subdivMonkey );
 	imshow(monkeyWindow, monkey_voronoi);
 
@@ -259,6 +285,8 @@ void getMonkeyTriangles(){
 
 	Size size = man.size();
 	Rect rect(0, 0, size.width, size.height);
+	vector<Vec6f> triangleList;
+	vector<Point2f> pt(3);
 
 	Subdiv2D subdivMonkey(rect);
 
@@ -266,8 +294,32 @@ void getMonkeyTriangles(){
 	{
 		subdivMonkey.insert(*it);
 	}
-   
-	subdivMonkey.getTriangleList(monkeyTri);
+
+	subdivMonkey.getTriangleList(triangleList);
+
+	for( size_t i = 0; i < triangleList.size(); i++ )
+	{
+		Vec6f t = triangleList[i];
+		pt[0] = Point(cvRound(t[0]), cvRound(t[1]));
+		pt[1] = Point(cvRound(t[2]), cvRound(t[3]));
+		pt[2] = Point(cvRound(t[4]), cvRound(t[5]));
+
+		// Draw rectangles completely inside the image.
+		if ( rect.contains(pt[0]) && rect.contains(pt[1]) && rect.contains(pt[2]))
+		{
+			monkeyTri.push_back(t);
+
+		}
+	}
+	ofstream file2("../../Images/MonkeyTriangles.txt");			
+	vector<Vec6f>::iterator mt = monkeyTri.begin();
+	for (; mt != monkeyTri.end(); ++mt)
+	{
+		file2 << mt[0] << endl;
+
+
+	}
+	file2.close();
 
 }
 
@@ -275,102 +327,145 @@ void getManTriangles(){
 
 	Size size = man.size();
 	Rect rect(0, 0, size.width, size.height);
+	vector<Vec6f> triangleList;
+	vector<Point2f> pt(3);
 
 	Subdiv2D subdivMan(rect);
 	for( vector<Point2f>::iterator it = manPoints.begin(); it != manPoints.end(); it++)
 	{
 		subdivMan.insert(*it);
-		
-	}
-   	subdivMan.getTriangleList(manTri);
 
+	}
+	subdivMan.getTriangleList(triangleList);
+
+	for( size_t i = 0; i < triangleList.size(); i++ )
+	{
+		Vec6f t = triangleList[i];
+		pt[0] = Point(cvRound(t[0]), cvRound(t[1]));
+		pt[1] = Point(cvRound(t[2]), cvRound(t[3]));
+		pt[2] = Point(cvRound(t[4]), cvRound(t[5]));
+
+		// Draw rectangles completely inside the image.
+		if ( rect.contains(pt[0]) && rect.contains(pt[1]) && rect.contains(pt[2]))
+		{
+			manTri.push_back(t);
+
+		}
+	}
+
+	ofstream file2("../../Images/ManTriangles.txt");			
+	vector<Vec6f>::iterator mt = manTri.begin();
+	for (; mt != manTri.end(); ++mt)
+	{
+		file2 << mt[0]<< endl;	
+	}
+	file2.close();
 }
 
 void getAveragedTriangles(){
 
 	Size size = man.size();
 	Rect rect(0, 0, size.width, size.height);
+	vector<Vec6f> triangleList;
+	vector<Point2f> pt(3);
 
-	Subdiv2D subdivMan(rect);
+	Subdiv2D subdivMorph(rect);
 
 	for( vector<Point2f>::iterator it = averagedPoints.begin(); it != averagedPoints.end(); it++)
 	{
-		subdivMan.insert(*it);
+		subdivMorph.insert(*it);
 	}
-   
-	subdivMan.getTriangleList(morphedTri);
+
+	subdivMorph.getTriangleList(triangleList);
+	for( size_t i = 0; i < triangleList.size(); i++ )
+	{
+		Vec6f t = triangleList[i];
+		pt[0] = Point(cvRound(t[0]), cvRound(t[1]));
+		pt[1] = Point(cvRound(t[2]), cvRound(t[3]));
+		pt[2] = Point(cvRound(t[4]), cvRound(t[5]));
+
+		// Draw rectangles completely inside the image.
+		if ( rect.contains(pt[0]) && rect.contains(pt[1]) && rect.contains(pt[2]))
+		{
+			morphedTri.push_back(t);
+
+		}
+	}
 
 }
 
 // Apply affine transform calculated using srcTri and dstTri to src
 void applyAffineTransform(Mat &warpImage, Mat &src, vector<Point2f> &srcTri, vector<Point2f> &dstTri)
 {
-    
-    // Given a pair of triangles, find the affine transform.
-    Mat warpMat = getAffineTransform( srcTri, dstTri );
-    
-    // Apply the Affine Transform just found to the src image
-    warpAffine( src, warpImage, warpMat, warpImage.size(), INTER_LINEAR, BORDER_REFLECT_101);
+
+	// Given a pair of triangles, find the affine transform.
+	Mat warpMat = getAffineTransform( srcTri, dstTri );
+
+	// Apply the Affine Transform just found to the src image
+	warpAffine( src, warpImage, warpMat, warpImage.size(), INTER_LINEAR, BORDER_REFLECT_101);
 }
 
 // Warps and alpha blends triangular regions from img1 and img2 to img
 void morphTriangle(Mat &img1, Mat &img2, Mat &img, vector<Point2f> &t1, vector<Point2f> &t2, vector<Point2f> &t, double alpha)
 {
-    
-    // Find bounding rectangle for each triangle
-    Rect r = boundingRect(t);
-    Rect r1 = boundingRect(t1);
-    Rect r2 = boundingRect(t2);
-    
-    // Offset points by left top corner of the respective rectangles
-    vector<Point2f> t1Rect, t2Rect, tRect;
-    vector<Point> tRectInt;
-    for(int i = 0; i < 3; i++)
-    {
-        tRect.push_back( Point2f( t[i].x - r.x, t[i].y -  r.y) );
-        tRectInt.push_back( Point(t[i].x - r.x, t[i].y - r.y) ); // for fillConvexPoly
-        
-        t1Rect.push_back( Point2f( t1[i].x - r1.x, t1[i].y -  r1.y) );
-        t2Rect.push_back( Point2f( t2[i].x - r2.x, t2[i].y - r2.y) );
-    }
-    
-    // Get mask by filling triangle
-    Mat mask = Mat::zeros(r.height, r.width, CV_32FC3);
-    fillConvexPoly(mask, tRectInt, Scalar(1.0, 1.0, 1.0), 16, 0);
-    
-    // Apply warpImage to small rectangular patches
-    Mat img1Rect, img2Rect;
-    img1(r1).copyTo(img1Rect);
-    img2(r2).copyTo(img2Rect);
-    
-    Mat warpImage1 = Mat::zeros(r.height, r.width, img1Rect.type());
-    Mat warpImage2 = Mat::zeros(r.height, r.width, img2Rect.type());
-    
-    applyAffineTransform(warpImage1, img1Rect, t1Rect, tRect);
-    applyAffineTransform(warpImage2, img2Rect, t2Rect, tRect);
-    
-    // Alpha blend rectangular patches
+
+	// Find bounding rectangle for each triangle
+	Rect r = boundingRect(t);
+	Rect r1 = boundingRect(t1);
+	Rect r2 = boundingRect(t2);
+
+	// Offset points by left top corner of the respective rectangles
+	vector<Point2f> t1Rect, t2Rect, tRect;
+	vector<Point> tRectInt;
+	for(int i = 0; i < 3; i++)
+	{
+		tRect.push_back( Point2f( t[i].x - r.x, t[i].y -  r.y) );
+		tRectInt.push_back( Point(t[i].x - r.x, t[i].y - r.y) ); // for fillConvexPoly
+
+		t1Rect.push_back( Point2f( t1[i].x - r1.x, t1[i].y -  r1.y) );
+		t2Rect.push_back( Point2f( t2[i].x - r2.x, t2[i].y - r2.y) );
+	}
+
+	// Get mask by filling triangle
+	Mat mask = Mat::zeros(r.height, r.width, CV_32FC3);
+	fillConvexPoly(mask, tRectInt, Scalar(1.0, 1.0, 1.0), 16, 0);
+
+	// Apply warpImage to small rectangular patches
+	Mat img1Rect, img2Rect;
+	img1(r1).copyTo(img1Rect);
+	img2(r2).copyTo(img2Rect);
+
+	Mat warpImage1 = Mat::zeros(r.height, r.width, img1Rect.type());
+	Mat warpImage2 = Mat::zeros(r.height, r.width, img2Rect.type());
+
+	applyAffineTransform(warpImage1, img1Rect, t1Rect, tRect);
+	applyAffineTransform(warpImage2, img2Rect, t2Rect, tRect);
+
+	// Alpha blend rectangular patches
 	//Mat imgRect(warpImage1.rows, warpImage1.cols, CV_32FC3);
-    Mat imgRect = (1.0 - alpha) * warpImage1 + alpha * warpImage2;
+	Mat imgRect = (1.0 - alpha) * warpImage1 + alpha * warpImage2;
 	imgRect.convertTo(imgRect,CV_32FC3);
 
-    // Copy triangular region of the rectangular patch to the output image
+	// Copy triangular region of the rectangular patch to the output image
 	multiply(imgRect, mask,imgRect);
 	img.convertTo(img,CV_32FC3);
 	multiply(img(r),Scalar(1.0,1.0,1.0) - mask, img(r));
 	img(r) = img(r) + imgRect;
-	img.convertTo(img,CV_8UC3);    
+	//img.convertTo(img,CV_8UC3);    
 }
+
+
 int main(int argc, char** argv)
 {
 	monkey = imread("../../Images/monkey1.jpg");
 	man = imread("../../Images/man1.jpg");
 	resize(monkey, monkey, man.size());			// Resize monkey to be the same size as man
 
-	morphedMonkey = monkey.clone();
+	morphedMonkey = Mat::zeros(man.size(), CV_32FC3);
 	clickMan =man.clone();
 	clickMonkey = monkey.clone();
-	//morphedMonkeyWarp = monkey.clone();  morphedManWarp = man.clone(); manWarp = man.clone(); monkeyWarp = monkey.clone();
+
+	float alpha = 0.8;
 
 	//getting Feature Points from User
 	getFeaturePointsMan();
@@ -388,43 +483,43 @@ int main(int argc, char** argv)
 	getManTriangles();
 	getMonkeyTriangles();
 	getAveragedTriangles();
-	
-	cout << " warp " << endl;
 
-	
+
+	map <pair<int,int>,int> pointsMap;
+
+	for(int i =0 ; i < manPoints.size(); i++){
+		pointsMap.insert(pair<pair<int,int>,int>(pair<int,int>(manPoints[i].x,manPoints[i].y),i));	
+	}
+
+
 	Size size = man.size();
 	Rect rect(0, 0, size.width, size.height);
 	for( size_t i = 0; i < manTri.size(); i++ )
 	{
-		
+
 		Vec6f manTri_t = manTri[i];
-		Vec6f monketTri_t = monkeyTri[i];
-		Vec6f averagedTri_t = morphedTri[i];
+		vector<Point2f> t1, t2, t;
+		int i1,i2,i3;
 
-		vector<Point2f> t1(3), t2(3), t(3);
-		
-		t1[0] = Point(cvRound(manTri_t[0]), cvRound(manTri_t[1]));
-		t1[1] = Point(cvRound(manTri_t[2]), cvRound(manTri_t[3]));
-		t1[2] = Point(cvRound(manTri_t[4]), cvRound(manTri_t[5]));
-				
-		t2[0] = Point(cvRound(monketTri_t[0]), cvRound(monketTri_t[1]));
-		t2[1] = Point(cvRound(monketTri_t[2]), cvRound(monketTri_t[3]));
-		t2[2] = Point(cvRound(monketTri_t[4]), cvRound(monketTri_t[5]));
-		
-		t[0] = Point(cvRound(averagedTri_t[0]), cvRound(averagedTri_t[1]));
-		t[1] = Point(cvRound(averagedTri_t[2]), cvRound(averagedTri_t[3]));
-		t[2] = Point(cvRound(averagedTri_t[4]), cvRound(averagedTri_t[5]));
+		t1.push_back(Point2f((manTri_t[0]), (manTri_t[1])));
+		t1.push_back(Point2f((manTri_t[2]), (manTri_t[3])));
+		t1.push_back(Point2f((manTri_t[4]), (manTri_t[5])));
 
-		if ( rect.contains(t1[0]) && rect.contains(t1[1]) && rect.contains(t1[2]) &&
-			 rect.contains(t2[0]) && rect.contains(t2[1]) && rect.contains(t2[2]) &&
-			 rect.contains(t[0]) && rect.contains(t[1]) && rect.contains(t[2]) 
-			)
-		{
-			morphTriangle(man,monkey,morphedMonkey,t1,t2,t,0.5);
-		}
-		
+		i1 = pointsMap.find(pair<int,int>(manTri_t[0],manTri_t[1]))->second;
+		i2 = pointsMap.find(pair<int,int>(manTri_t[2],manTri_t[3]))->second;
+		i3 = pointsMap.find(pair<int,int>(manTri_t[4],manTri_t[5]))->second;
+
+		t2.push_back(monkeyPoints[i1]);
+		t2.push_back(monkeyPoints[i2]);
+		t2.push_back(monkeyPoints[i3]);
+
+		t.push_back(averagedPoints[i1]);
+		t.push_back(averagedPoints[i2]);
+		t.push_back(averagedPoints[i3]);
+
+		morphTriangle(man,monkey,morphedMonkey,t1,t2,t,alpha);
+
 	}
-
-	imshow("morphed",morphedMonkey);
+	imshow("morphed",morphedMonkey/255.0);
 	cvWaitKey(0);
 }
