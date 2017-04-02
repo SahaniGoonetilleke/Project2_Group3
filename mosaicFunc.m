@@ -62,7 +62,7 @@ clear H score ok;
 
 %Run 100 iterations to compute homography
 
-for t = 1:100
+for t = 1:1500
     %Perform Direct Linear Transformation based on 4 random points
     randPoints = vl_colsubset(1:numMatches, 4); 
     A = [];
@@ -92,35 +92,34 @@ end
 H = H{best};
 ok = ok{best};
 
-
 % --------------------------------------------------------------------
 %                                                         Show matches
 % --------------------------------------------------------------------
-% 
-% dh1 = max(size(Ib,1)-size(Ia,1),0) ;
-% dh2 = max(size(Ia,1)-size(Ib,1),0) ;
-% 
-% figure(1) ; clf ;
-% subplot(2,1,1) ;
-% imagesc([padarray(Ia,dh1,'post') padarray(Ib,dh2,'post')]) ;
-% o = size(Ia,2) ;
-% line([fa(1,matches(1,:));fb(1,matches(2,:))+o], ...
-%      [fa(2,matches(1,:));fb(2,matches(2,:))]) ;
-% title(sprintf('%d tentative matches', numMatches)) ;
-% axis image off ;
-% 
-% subplot(2,1,2) ;
-% imagesc([padarray(Ia,dh1,'post') padarray(Ib,dh2,'post')]) ;
-% o = size(Ia,2) ;
-% line([fa(1,matches(1,ok));fb(1,matches(2,ok))+o], ...
-%      [fa(2,matches(1,ok));fb(2,matches(2,ok))]) ;
-% title(sprintf('%d (%.2f%%) inliner matches out of %d', ...
-%               sum(ok), ...
-%               100*sum(ok)/numMatches, ...
-%               numMatches)) ;
-% axis image off ;
-% 
-% drawnow ;
+
+dh1 = max(size(Ib,1)-size(Ia,1),0) ;
+dh2 = max(size(Ia,1)-size(Ib,1),0) ;
+
+figure ; clf ;
+subplot(2,1,1) ;
+imagesc([padarray(Ia,dh1,'post') padarray(Ib,dh2,'post')]) ;
+o = size(Ia,2) ;
+line([fa(1,matches(1,:));fb(1,matches(2,:))+o], ...
+     [fa(2,matches(1,:));fb(2,matches(2,:))]) ;
+title(sprintf('%d tentative matches', numMatches)) ;
+axis image off ;
+
+subplot(2,1,2) ;
+imagesc([padarray(Ia,dh1,'post') padarray(Ib,dh2,'post')]) ;
+o = size(Ia,2) ;
+line([fa(1,matches(1,ok));fb(1,matches(2,ok))+o], ...
+     [fa(2,matches(1,ok));fb(2,matches(2,ok))]) ;
+title(sprintf('%d (%.2f%%) inliner matches out of %d', ...
+              sum(ok), ...
+              100*sum(ok)/numMatches, ...
+              numMatches)) ;
+axis image off ;
+
+drawnow ;
 
 % --------------------------------------------------------------------
 %                                                               Mosaic

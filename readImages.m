@@ -1,5 +1,5 @@
-
-cd Synthetic
+close all
+cd Building
 imageFiles = dir('*.jpg');
 nFiles = length(imageFiles);
 numFeat = zeros(1, nFiles);
