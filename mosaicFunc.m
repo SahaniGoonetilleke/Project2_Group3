@@ -125,18 +125,24 @@ drawnow ;
 %                                                               Mosaic
 % --------------------------------------------------------------------
 
+% Calculating the extreme coordinates to create the workspace for the
+% panorama
 box2 = [1  size(Ib,2) size(Ib,2)  1 ;
         1  1           size(Ib,1)  size(Ib,1) ;
         1  1           1            1 ] ;
 box2_ = inv(H) * box2 ;
 box2_(1,:) = box2_(1,:) ./ box2_(3,:) ;
 box2_(2,:) = box2_(2,:) ./ box2_(3,:) ;
+
+% Selecting the minimum and maximum x,y coordinates
 ur = min([1 box2_(1,:)]):max([size(Ia,2) box2_(1,:)]) ;
 vr = min([1 box2_(2,:)]):max([size(Ia,1) box2_(2,:)]) ;
 
+% Project the first image onto the workspace
 [u,v] = meshgrid(ur,vr) ;
 Ia_ = vl_imwbackward(im2double(Ia),u,v) ;
 
+% Project the second image onto the workspace
 z_ = H(3,1) * u + H(3,2) * v + H(3,3) ;
 u_ = (H(1,1) * u + H(1,2) * v + H(1,3)) ./ z_ ;
 v_ = (H(2,1) * u + H(2,2) * v + H(2,3)) ./ z_ ;
